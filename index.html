@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello Cube</title>
+</head>
+<body>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <script>
+
+        //CREATING SCENE
+        var scene = new THREE.Scene();
+        //Color de fondo de la escena en formato hexadecimal
+        scene.background = new THREE.Color(0x2a3b4c);
+
+        //ADD CAMERA
+        var camera = new THREE.PerspectiveCamera(
+            //Perspectiva
+            75,
+            //Aspecto: ancho/alto de la ventana del navegador
+            window.innerWidth/window.innerHeight
+        );
+
+        //RENDERER
+        var renderer = new THREE.WebGLRenderer();
+        //Tamaño del marco del renderer
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        //Insertar el renderer al documento HTML
+        document.body.appendChild(renderer.domElement);
+
+
+        //GEOMETRY
+        //Método que crea el cubo
+        var geometry = new THREE.BoxGeometry();
+        var material = new THREE.MeshBasicMaterial({color: 0x00ff00, wireframe: true});
+        //Mesh recibe una geometría y un material
+        var cube = new THREE.Mesh(geometry, material);
+        //Agregamos el cubo a la geometría
+        scene.add(cube);
+        //Colocamos la cámara en una posición diferente a la del cubo
+        camera.position.z = 5;
+
+        
+        //ANIMATION
+        
+        var animate = function(){
+            //Hace las veces de ciclo repetitivo
+            requestAnimationFrame(animate);
+            //Cada vez que se repìta la animación
+            cube.rotation.x += 0.01;
+            cube.rotation.y += 0.01;
+
+            //Agregar escena y cámara al renderer
+            //Dentro de animate para que actualice la escena en cada repetición de la animación
+            renderer.render(scene, camera);
+
+        }
+
+        animate();
+
+    </script>
+
+</body>
+</html>
