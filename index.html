@@ -12,25 +12,42 @@
     <script>
 
         //CREATING SCENE
-        var scene = new THREE.Scene();
+        var scene = new THREE.Scene(); 
         //Color de fondo de la escena en formato hexadecimal
-        scene.background = new THREE.Color(0x2a3b4c);
-         //Efecto neblina en el fondo
-        scene.fog = new THREE.Fog(0x76456c, 0.1, 8);
+        //scene.background = new THREE.Color(0x2a3b4c);
+        //Efecto neblina en el fondo
+       // scene.fog = new THREE.Fog(0x76456c, 0.1, 8);
 
             //cargar imagen de fondo
-            var loader = new THREE.TextureLoader();
-            loader.load('./background.jpg',function(texture){
-                scene.background = texture;
-            })
+         //   var loader = new THREE.TextureLoader();
+           // loader.load('./background.jpg',function(texture){
+             //   scene.background = texture;
+            // })
 
         //ADD CAMERA
         var camera = new THREE.PerspectiveCamera(
-            //Perspectiva
+            //Field of View
             75,
             //Aspecto: ancho/alto de la ventana del navegador
-            window.innerWidth/window.innerHeight
+            window.innerWidth/window.innerHeight,
+           // Near
+            3,
+            //Far
+            100
         );
+
+        //Camara perspectiva
+        //var newcamera = new THREE.PerspectiveCamera(
+          //              75,
+            //            window.innerWidth/window.innerHeight,
+              //          0.1,
+                //        10
+        //);
+
+        var newcamera = new THREE.OrthographicCamera(5,-5,5,-5,3,10);
+
+        var helper = new THREE.CameraHelper(newcamera)
+        scene.add(helper)
 
         //RENDERER
         var renderer = new THREE.WebGLRenderer();
@@ -43,27 +60,38 @@
         //GEOMETRY
         //Método que crea el cubo
         var geometry = new THREE.BoxGeometry();
-        var material = new THREE.MeshBasicMaterial({color: 0x00ff00, wireframe: true});
+        var material = new THREE.MeshBasicMaterial({
+            color: 0x00ff00, 
+            wireframe: true,
+        });
         //Mesh recibe una geometría y un material
         var cube = new THREE.Mesh(geometry, material);
+        cube.position.z = -5;
         //Agregamos el cubo a la geometría
         scene.add(cube);
         //Colocamos la cámara en una posición diferente a la del cubo
-        camera.position.z = 5;
+       // camera.position.z = 5;
 
         
         //ANIMATION
-        
+        var i=0;
         var animate = function(){
             //Hace las veces de ciclo repetitivo
             requestAnimationFrame(animate);
+
+            camera.lookAt(newcamera.position)
+
+            camera.position.x = Math.cos(i) * 30
+            camera.position.z = Math.sin(i) * 30
+            i +=0.01;
+
             //Cada vez que se repìta la animación
-            cube.rotation.x += 0.01;
-            cube.rotation.y += 0.01;
+           // cube.rotation.x += 0.01;
+            // cube.rotation.y += 0.01;
 
             //Agregar escena y cámara al renderer
             //Dentro de animate para que actualice la escena en cada repetición de la animación
-            renderer.render(scene, camera);
+            renderer.render(scene, newcamera);
 
         }
 
